@@ -1,0 +1,2 @@
+#!/bin/bash
+gvim ../src/include/catalog/pg_proc.h

@@ -1,0 +1,2 @@
+#!/bin/bash
+gvim ../src/backend/utils/fmgr/funcapi.c
