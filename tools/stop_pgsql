@@ -1,0 +1,2 @@
+#!/bin/bash
+~/pgsql/bin/pg_ctl -D ~/pgsql/data stop
