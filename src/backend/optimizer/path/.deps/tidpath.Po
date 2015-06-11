@@ -1,0 +1,85 @@
+tidpath.o: tidpath.c ../../../../src/include/postgres.h \
+ ../../../../src/include/c.h ../../../../src/include/pg_config.h \
+ ../../../../src/include/pg_config_manual.h \
+ ../../../../src/include/pg_config_os.h \
+ ../../../../src/include/postgres_ext.h ../../../../src/include/port.h \
+ ../../../../src/include/utils/elog.h \
+ ../../../../src/include/utils/errcodes.h \
+ ../../../../src/include/utils/palloc.h \
+ ../../../../src/include/access/sysattr.h \
+ ../../../../src/include/catalog/pg_operator.h \
+ ../../../../src/include/catalog/genbki.h \
+ ../../../../src/include/nodes/pg_list.h \
+ ../../../../src/include/nodes/nodes.h \
+ ../../../../src/include/catalog/pg_type.h \
+ ../../../../src/include/nodes/nodeFuncs.h \
+ ../../../../src/include/nodes/parsenodes.h \
+ ../../../../src/include/nodes/bitmapset.h \
+ ../../../../src/include/nodes/primnodes.h \
+ ../../../../src/include/access/attnum.h \
+ ../../../../src/include/nodes/value.h \
+ ../../../../src/include/optimizer/clauses.h \
+ ../../../../src/include/nodes/relation.h \
+ ../../../../src/include/access/sdir.h \
+ ../../../../src/include/nodes/params.h \
+ ../../../../src/include/storage/block.h \
+ ../../../../src/include/optimizer/pathnode.h \
+ ../../../../src/include/optimizer/paths.h
+
+../../../../src/include/postgres.h:
+
+../../../../src/include/c.h:
+
+../../../../src/include/pg_config.h:
+
+../../../../src/include/pg_config_manual.h:
+
+../../../../src/include/pg_config_os.h:
+
+../../../../src/include/postgres_ext.h:
+
+../../../../src/include/port.h:
+
+../../../../src/include/utils/elog.h:
+
+../../../../src/include/utils/errcodes.h:
+
+../../../../src/include/utils/palloc.h:
+
+../../../../src/include/access/sysattr.h:
+
+../../../../src/include/catalog/pg_operator.h:
+
+../../../../src/include/catalog/genbki.h:
+
+../../../../src/include/nodes/pg_list.h:
+
+../../../../src/include/nodes/nodes.h:
+
+../../../../src/include/catalog/pg_type.h:
+
+../../../../src/include/nodes/nodeFuncs.h:
+
+../../../../src/include/nodes/parsenodes.h:
+
+../../../../src/include/nodes/bitmapset.h:
+
+../../../../src/include/nodes/primnodes.h:
+
+../../../../src/include/access/attnum.h:
+
+../../../../src/include/nodes/value.h:
+
+../../../../src/include/optimizer/clauses.h:
+
+../../../../src/include/nodes/relation.h:
+
+../../../../src/include/access/sdir.h:
+
+../../../../src/include/nodes/params.h:
+
+../../../../src/include/storage/block.h:
+
+../../../../src/include/optimizer/pathnode.h:
+
+../../../../src/include/optimizer/paths.h:

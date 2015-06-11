@@ -1,0 +1,18 @@
+md5.o: md5.c ../../../src/include/c.h ../../../src/include/pg_config.h \
+ ../../../src/include/pg_config_manual.h \
+ ../../../src/include/pg_config_os.h ../../../src/include/postgres_ext.h \
+ ../../../src/include/port.h ../../../src/include/libpq/md5.h
+
+../../../src/include/c.h:
+
+../../../src/include/pg_config.h:
+
+../../../src/include/pg_config_manual.h:
+
+../../../src/include/pg_config_os.h:
+
+../../../src/include/postgres_ext.h:
+
+../../../src/include/port.h:
+
+../../../src/include/libpq/md5.h:

@@ -1,0 +1,43 @@
+tab-complete.o: tab-complete.c ../../../src/include/postgres_fe.h \
+ ../../../src/include/c.h ../../../src/include/pg_config.h \
+ ../../../src/include/pg_config_manual.h \
+ ../../../src/include/pg_config_os.h ../../../src/include/postgres_ext.h \
+ ../../../src/include/port.h tab-complete.h input.h \
+ ../../../src/interfaces/libpq/pqexpbuffer.h \
+ ../../../src/interfaces/libpq/libpq-fe.h \
+ ../../../src/include/postgres_ext.h common.h settings.h variables.h \
+ print.h stringutils.h
+
+../../../src/include/postgres_fe.h:
+
+../../../src/include/c.h:
+
+../../../src/include/pg_config.h:
+
+../../../src/include/pg_config_manual.h:
+
+../../../src/include/pg_config_os.h:
+
+../../../src/include/postgres_ext.h:
+
+../../../src/include/port.h:
+
+tab-complete.h:
+
+input.h:
+
+../../../src/interfaces/libpq/pqexpbuffer.h:
+
+../../../src/interfaces/libpq/libpq-fe.h:
+
+../../../src/include/postgres_ext.h:
+
+common.h:
+
+settings.h:
+
+variables.h:
+
+print.h:
+
+stringutils.h:

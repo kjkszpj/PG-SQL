@@ -1,0 +1,1 @@
+src/backend/replication/walsender.o src/backend/replication/walreceiverfuncs.o src/backend/replication/walreceiver.o src/backend/replication/basebackup.o src/backend/replication/repl_gram.o src/backend/replication/syncrep.o

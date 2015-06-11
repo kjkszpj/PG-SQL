@@ -1,0 +1,98 @@
+dummy_seclabel.o: dummy_seclabel.c ../../src/include/postgres.h \
+ ../../src/include/c.h ../../src/include/pg_config.h \
+ ../../src/include/pg_config_manual.h ../../src/include/pg_config_os.h \
+ ../../src/include/postgres_ext.h ../../src/include/port.h \
+ ../../src/include/utils/elog.h ../../src/include/utils/errcodes.h \
+ ../../src/include/utils/palloc.h ../../src/include/commands/seclabel.h \
+ ../../src/include/catalog/objectaddress.h \
+ ../../src/include/nodes/parsenodes.h ../../src/include/nodes/bitmapset.h \
+ ../../src/include/nodes/primnodes.h ../../src/include/access/attnum.h \
+ ../../src/include/nodes/pg_list.h ../../src/include/nodes/nodes.h \
+ ../../src/include/nodes/value.h ../../src/include/storage/lock.h \
+ ../../src/include/storage/backendid.h ../../src/include/storage/lwlock.h \
+ ../../src/include/storage/shmem.h ../../src/include/utils/hsearch.h \
+ ../../src/include/utils/rel.h ../../src/include/access/tupdesc.h \
+ ../../src/include/catalog/pg_attribute.h \
+ ../../src/include/catalog/genbki.h ../../src/include/catalog/pg_am.h \
+ ../../src/include/catalog/pg_class.h \
+ ../../src/include/catalog/pg_index.h ../../src/include/fmgr.h \
+ ../../src/include/rewrite/prs2lock.h ../../src/include/storage/block.h \
+ ../../src/include/storage/relfilenode.h \
+ ../../src/include/utils/relcache.h ../../src/include/miscadmin.h \
+ ../../src/include/pgtime.h
+
+../../src/include/postgres.h:
+
+../../src/include/c.h:
+
+../../src/include/pg_config.h:
+
+../../src/include/pg_config_manual.h:
+
+../../src/include/pg_config_os.h:
+
+../../src/include/postgres_ext.h:
+
+../../src/include/port.h:
+
+../../src/include/utils/elog.h:
+
+../../src/include/utils/errcodes.h:
+
+../../src/include/utils/palloc.h:
+
+../../src/include/commands/seclabel.h:
+
+../../src/include/catalog/objectaddress.h:
+
+../../src/include/nodes/parsenodes.h:
+
+../../src/include/nodes/bitmapset.h:
+
+../../src/include/nodes/primnodes.h:
+
+../../src/include/access/attnum.h:
+
+../../src/include/nodes/pg_list.h:
+
+../../src/include/nodes/nodes.h:
+
+../../src/include/nodes/value.h:
+
+../../src/include/storage/lock.h:
+
+../../src/include/storage/backendid.h:
+
+../../src/include/storage/lwlock.h:
+
+../../src/include/storage/shmem.h:
+
+../../src/include/utils/hsearch.h:
+
+../../src/include/utils/rel.h:
+
+../../src/include/access/tupdesc.h:
+
+../../src/include/catalog/pg_attribute.h:
+
+../../src/include/catalog/genbki.h:
+
+../../src/include/catalog/pg_am.h:
+
+../../src/include/catalog/pg_class.h:
+
+../../src/include/catalog/pg_index.h:
+
+../../src/include/fmgr.h:
+
+../../src/include/rewrite/prs2lock.h:
+
+../../src/include/storage/block.h:
+
+../../src/include/storage/relfilenode.h:
+
+../../src/include/utils/relcache.h:
+
+../../src/include/miscadmin.h:
+
+../../src/include/pgtime.h:

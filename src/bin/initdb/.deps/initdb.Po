@@ -1,0 +1,34 @@
+initdb.o: initdb.c ../../../src/include/postgres_fe.h \
+ ../../../src/include/c.h ../../../src/include/pg_config.h \
+ ../../../src/include/pg_config_manual.h \
+ ../../../src/include/pg_config_os.h ../../../src/include/postgres_ext.h \
+ ../../../src/include/port.h ../../../src/include/libpq/pqsignal.h \
+ ../../../src/include/mb/pg_wchar.h ../../../src/include/getaddrinfo.h \
+ ../../../src/include/getopt_long.h ../../../src/include/miscadmin.h \
+ ../../../src/include/pgtime.h
+
+../../../src/include/postgres_fe.h:
+
+../../../src/include/c.h:
+
+../../../src/include/pg_config.h:
+
+../../../src/include/pg_config_manual.h:
+
+../../../src/include/pg_config_os.h:
+
+../../../src/include/postgres_ext.h:
+
+../../../src/include/port.h:
+
+../../../src/include/libpq/pqsignal.h:
+
+../../../src/include/mb/pg_wchar.h:
+
+../../../src/include/getaddrinfo.h:
+
+../../../src/include/getopt_long.h:
+
+../../../src/include/miscadmin.h:
+
+../../../src/include/pgtime.h:

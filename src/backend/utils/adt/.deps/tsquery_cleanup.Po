@@ -1,0 +1,53 @@
+tsquery_cleanup.o: tsquery_cleanup.c ../../../../src/include/postgres.h \
+ ../../../../src/include/c.h ../../../../src/include/pg_config.h \
+ ../../../../src/include/pg_config_manual.h \
+ ../../../../src/include/pg_config_os.h \
+ ../../../../src/include/postgres_ext.h ../../../../src/include/port.h \
+ ../../../../src/include/utils/elog.h \
+ ../../../../src/include/utils/errcodes.h \
+ ../../../../src/include/utils/palloc.h \
+ ../../../../src/include/tsearch/ts_type.h ../../../../src/include/fmgr.h \
+ ../../../../src/include/utils/pg_crc.h \
+ ../../../../src/include/tsearch/ts_utils.h \
+ ../../../../src/include/tsearch/ts_public.h \
+ ../../../../src/include/nodes/pg_list.h \
+ ../../../../src/include/nodes/nodes.h \
+ ../../../../src/include/miscadmin.h ../../../../src/include/pgtime.h
+
+../../../../src/include/postgres.h:
+
+../../../../src/include/c.h:
+
+../../../../src/include/pg_config.h:
+
+../../../../src/include/pg_config_manual.h:
+
+../../../../src/include/pg_config_os.h:
+
+../../../../src/include/postgres_ext.h:
+
+../../../../src/include/port.h:
+
+../../../../src/include/utils/elog.h:
+
+../../../../src/include/utils/errcodes.h:
+
+../../../../src/include/utils/palloc.h:
+
+../../../../src/include/tsearch/ts_type.h:
+
+../../../../src/include/fmgr.h:
+
+../../../../src/include/utils/pg_crc.h:
+
+../../../../src/include/tsearch/ts_utils.h:
+
+../../../../src/include/tsearch/ts_public.h:
+
+../../../../src/include/nodes/pg_list.h:
+
+../../../../src/include/nodes/nodes.h:
+
+../../../../src/include/miscadmin.h:
+
+../../../../src/include/pgtime.h:

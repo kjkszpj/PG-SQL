@@ -1,0 +1,22 @@
+scheck.o: scheck.c ../../src/include/postgres_fe.h ../../src/include/c.h \
+ ../../src/include/pg_config.h ../../src/include/pg_config_manual.h \
+ ../../src/include/pg_config_os.h ../../src/include/postgres_ext.h \
+ ../../src/include/port.h private.h ../../src/include/pgtime.h
+
+../../src/include/postgres_fe.h:
+
+../../src/include/c.h:
+
+../../src/include/pg_config.h:
+
+../../src/include/pg_config_manual.h:
+
+../../src/include/pg_config_os.h:
+
+../../src/include/postgres_ext.h:
+
+../../src/include/port.h:
+
+private.h:
+
+../../src/include/pgtime.h:

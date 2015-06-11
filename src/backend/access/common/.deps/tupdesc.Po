@@ -1,0 +1,129 @@
+tupdesc.o: tupdesc.c ../../../../src/include/postgres.h \
+ ../../../../src/include/c.h ../../../../src/include/pg_config.h \
+ ../../../../src/include/pg_config_manual.h \
+ ../../../../src/include/pg_config_os.h \
+ ../../../../src/include/postgres_ext.h ../../../../src/include/port.h \
+ ../../../../src/include/utils/elog.h \
+ ../../../../src/include/utils/errcodes.h \
+ ../../../../src/include/utils/palloc.h \
+ ../../../../src/include/catalog/pg_type.h \
+ ../../../../src/include/catalog/genbki.h \
+ ../../../../src/include/parser/parse_type.h \
+ ../../../../src/include/access/htup.h \
+ ../../../../src/include/access/tupdesc.h \
+ ../../../../src/include/access/attnum.h \
+ ../../../../src/include/catalog/pg_attribute.h \
+ ../../../../src/include/nodes/pg_list.h \
+ ../../../../src/include/nodes/nodes.h \
+ ../../../../src/include/access/tupmacs.h \
+ ../../../../src/include/storage/itemptr.h \
+ ../../../../src/include/storage/block.h \
+ ../../../../src/include/storage/off.h \
+ ../../../../src/include/storage/itemid.h \
+ ../../../../src/include/storage/relfilenode.h \
+ ../../../../src/include/storage/backendid.h \
+ ../../../../src/include/parser/parse_node.h \
+ ../../../../src/include/nodes/parsenodes.h \
+ ../../../../src/include/nodes/bitmapset.h \
+ ../../../../src/include/nodes/primnodes.h \
+ ../../../../src/include/nodes/value.h \
+ ../../../../src/include/utils/relcache.h \
+ ../../../../src/include/utils/builtins.h ../../../../src/include/fmgr.h \
+ ../../../../src/include/utils/resowner.h \
+ ../../../../src/include/storage/buf.h \
+ ../../../../src/include/storage/fd.h \
+ ../../../../src/include/utils/catcache.h \
+ ../../../../src/include/access/skey.h \
+ ../../../../src/include/lib/dllist.h \
+ ../../../../src/include/utils/plancache.h \
+ ../../../../src/include/nodes/params.h \
+ ../../../../src/include/utils/snapshot.h \
+ ../../../../src/include/utils/syscache.h
+
+../../../../src/include/postgres.h:
+
+../../../../src/include/c.h:
+
+../../../../src/include/pg_config.h:
+
+../../../../src/include/pg_config_manual.h:
+
+../../../../src/include/pg_config_os.h:
+
+../../../../src/include/postgres_ext.h:
+
+../../../../src/include/port.h:
+
+../../../../src/include/utils/elog.h:
+
+../../../../src/include/utils/errcodes.h:
+
+../../../../src/include/utils/palloc.h:
+
+../../../../src/include/catalog/pg_type.h:
+
+../../../../src/include/catalog/genbki.h:
+
+../../../../src/include/parser/parse_type.h:
+
+../../../../src/include/access/htup.h:
+
+../../../../src/include/access/tupdesc.h:
+
+../../../../src/include/access/attnum.h:
+
+../../../../src/include/catalog/pg_attribute.h:
+
+../../../../src/include/nodes/pg_list.h:
+
+../../../../src/include/nodes/nodes.h:
+
+../../../../src/include/access/tupmacs.h:
+
+../../../../src/include/storage/itemptr.h:
+
+../../../../src/include/storage/block.h:
+
+../../../../src/include/storage/off.h:
+
+../../../../src/include/storage/itemid.h:
+
+../../../../src/include/storage/relfilenode.h:
+
+../../../../src/include/storage/backendid.h:
+
+../../../../src/include/parser/parse_node.h:
+
+../../../../src/include/nodes/parsenodes.h:
+
+../../../../src/include/nodes/bitmapset.h:
+
+../../../../src/include/nodes/primnodes.h:
+
+../../../../src/include/nodes/value.h:
+
+../../../../src/include/utils/relcache.h:
+
+../../../../src/include/utils/builtins.h:
+
+../../../../src/include/fmgr.h:
+
+../../../../src/include/utils/resowner.h:
+
+../../../../src/include/storage/buf.h:
+
+../../../../src/include/storage/fd.h:
+
+../../../../src/include/utils/catcache.h:
+
+../../../../src/include/access/skey.h:
+
+../../../../src/include/lib/dllist.h:
+
+../../../../src/include/utils/plancache.h:
+
+../../../../src/include/nodes/params.h:
+
+../../../../src/include/utils/snapshot.h:
+
+../../../../src/include/utils/syscache.h:
