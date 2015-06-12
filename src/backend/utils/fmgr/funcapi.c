@@ -42,19 +42,47 @@ static TypeFuncClass get_type_func_class(Oid typid);
 // mine start here
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
 {
-	text *str_01 = PG_GETARG_DATUM(0);
-	text *txt_02 = PG_GETARG_DATUM(1);
-	int32 result=233;
-	int i;
+	int min(int a, int b) {return a < b ? a : b;}
 	
-	elog(LOG, "hello world %d", VARSIZE(str_01));
-	for (i = 0; i < VARSIZE(str_01); i++) elog(LOG, "data at %d\t%d", i, VARDATA(str_01)[i]);
-	PG_RETURN_INT32(result);
+	text *txt_01 = PG_GETARG_DATUM(0);
+	text *txt_02 = PG_GETARG_DATUM(1);
+	/*
+		int32 result=233;
+		int i;
+	
+		elog(LOG, "hello world %d", VARSIZE(str_01));
+		for (i = 0; i < VARSIZE(str_01); i++) elog(LOG, "data at %d\t%d", i, VARDATA(str_01)[i]);
+		PG_RETURN_INT32(result);
+	*/
+	int i, j;
+	int n1 = VARSIZE(txt_01) - VARHDRSZ;
+	int n2 = VARSIZE(txt_02) - VARHDRSZ;
+	int f[n1 + 10][n2 + 10];
+	int OO = 1000000000;
+	
+	memset(f, 0, sizeof(f));
+	for (i = 0; i <= n1; i++)
+		for (j = 0; j <= n2; j++) f[i][j] = OO;
+	f[0][0] = 0;
+	for (i = 0; i <= n1; i++)
+		for (j = 0; j <= n2; j++)
+		{
+			if (i > 0) f[i][j] = min(f[i][j], f[i - 1][j] + 1);
+			if (j > 0) f[i][j] = min(f[i][j], f[i][j - 1] + 1);
+			if (i > 0 && j > 0)
+			{
+				char c1 = VARDATA(txt_01)[i - 1];
+				char c2 = VARDATA(txt_02)[j - 1];
+				elog(LOG, "%c vs %c", c1, c2);
+				if (c1 == c2) f[i][j] = min(f[i][j], f[i - 1][j - 1]); else f[i][j] = min(f[i][j], f[i - 1][j - 1] + 1);
+			}
+		}
+	PG_RETURN_INT32(f[n1][n2]);
 }
 
 Datum jaccard_index (PG_FUNCTION_ARGS)
 {
-	text *str_01 = PG_GETARG_DATUM(0);
+	text *txt_01 = PG_GETARG_DATUM(0);
 	text *txt_02 = PG_GETARG_DATUM(1);
 	int32 result=233;
 	PG_RETURN_INT32(result);
