@@ -1,8 +1,13 @@
 for src/include/catelog/pg_proc.h
 
-http://www.postgresql.org/docs/9.3/static/catalog-pg-type.html
+	http://www.postgresql.org/docs/9.3/static/catalog-pg-type.html
 
-关键的数字：
-25：text
-20：int
-700：float
+	关键的数字：
+	25：text
+	20：int
+	700：float
+
+for text:
+	see char.c
+	http://www.postgresql.org/docs/9.3/static/xfunc-c.html
+	postgres.h

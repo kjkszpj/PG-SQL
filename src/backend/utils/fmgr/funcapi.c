@@ -42,10 +42,13 @@ static TypeFuncClass get_type_func_class(Oid typid);
 // mine start here
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
 {
-	text * str_01 = PG_GETARG_DATUM(0);
+	text *str_01 = PG_GETARG_DATUM(0);
 	text *txt_02 = PG_GETARG_DATUM(1);
 	int32 result=233;
-	elog(LOG, "hello world %d", 1 + 1);
+	int i;
+	
+	elog(LOG, "hello world %d", VARSIZE(str_01));
+	for (i = 0; i < VARSIZE(str_01); i++) elog(LOG, "data at %d\t%d", i, VARDATA(str_01)[i]);
 	PG_RETURN_INT32(result);
 }
 
