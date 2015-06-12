@@ -7,6 +7,13 @@
 
 ---
 
+##TODO
+-	加速levenshtein_distance
+-	实现jaccard_index
+-	(optional)实现块嵌套循环连接
+
+---
+
 ##联系我
 Peijie You
 
