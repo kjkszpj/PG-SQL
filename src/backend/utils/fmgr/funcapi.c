@@ -81,10 +81,46 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 
 Datum jaccard_index (PG_FUNCTION_ARGS)
 {
-	text *txt_01 = PG_GETARG_DATUM(0);
-	text *txt_02 = PG_GETARG_DATUM(1);
-	int32 result=233;
-	PG_RETURN_INT32(result);
+	text *txt_01 = PG_GETARG_TEXT_P(0);
+	text *txt_02 = PG_GETARG_TEXT_P(1);
+
+	char c1 = 7, c2;
+
+	int cnt_and = 0, i, j, cnt_or = 0;
+	int n1 = VARSIZE(txt_01) - VARHDRSZ;
+	int n2 = VARSIZE(txt_02) - VARHDRSZ;
+
+	// enough for ASCII in this problem
+	bool seta[16384];
+	bool setb[16384];
+
+	memset(seta, false, sizeof(seta));
+	memset(setb, false, sizeof(setb));
+	for (i = 0; i < n1 + 1; i++)
+	{
+		if (i < n1) c2 = VARDATA(txt_01)[i]; else c2 = 7;
+		j = (c1 << 7) + c2;
+		if (!seta[j])
+		{
+			seta[j] = true;
+			cnt_or++;
+		}
+		c1 = c2;
+	}
+	for (i = 0; i < n2 + 1; i++)
+	{
+		if (i < n2)	c2 = VARDATA(txt_02)[i]; else c2 = 7;
+		j = (c1 << 7) + c2;
+		if (!setb[j])
+		{
+			setb[j] = true;
+			if (seta[j]) cnt_and++;
+			else cnt_or++;
+		}
+		c1 = c2;
+	}
+	if (cnt_or == 0) PG_RETURN_FLOAT4(0);
+	PG_RETURN_FLOAT4(cnt_and * 1.0 / cnt_or);
 }
 
 /*

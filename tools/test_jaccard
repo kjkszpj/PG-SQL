@@ -1,0 +1,6 @@
+#!/bin/bash
+time $HOME/pgsql/bin/psql sim -c 'select count(*) from restaurantphone rp, addressphone ap where jaccard_index(rp.phone, ap.phone) > .6;'
+
+time $HOME/pgsql/bin/psql sim -c 'select count(*) from restaurantaddress ra, restaurantphone rp where jaccard_index(ra.name, rp.name) > .65;'
+
+time $HOME/pgsql/bin/psql sim -c 'select count(*) from restaurantaddress ra, addressphone ap where jaccard_index(ra.address, ap.address) > .8;'
