@@ -45,7 +45,8 @@ Datum levenshtein_fast(PG_FUNCTION_ARGS)
 {
 	text *s1 = PG_GETARG_TEXT_P(0);
 	text *s2 = PG_GETARG_TEXT_P(1);
-	PG_RETURN_INT32(0);
+	int maxd = PG_GETARG_INT32(2);
+	PG_RETURN_INT32(maxd);
 }
 
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
@@ -54,14 +55,7 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 	
 	text *txt_01 = PG_GETARG_TEXT_P(0);
 	text *txt_02 = PG_GETARG_TEXT_P(1);
-	/*
-		int32 result=233;
-		int i;
 	
-		elog(LOG, "hello world %d", VARSIZE(str_01));
-		for (i = 0; i < VARSIZE(str_01); i++) elog(LOG, "data at %d\t%d", i, VARDATA(str_01)[i]);
-		PG_RETURN_INT32(result);
-	*/
 	char c1, c2;
 	int i, j;
 	int n1 = VARSIZE(txt_01) - VARHDRSZ;
