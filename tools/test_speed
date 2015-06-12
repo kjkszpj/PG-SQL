@@ -1,0 +1,6 @@
+#!/bin/bash
+time $HOME/pgsql/bin/psql sim -c 'select count(*) from restaurantphone rp, addressphone ap where levenshtein_distance(rp.phone, ap.phone) < 4;'
+
+time $HOME/pgsql/bin/psql sim -c 'select count(*) from restaurantaddress ra, restaurantphone rp where levenshtein_distance(ra.name, rp.name) < 3;'
+
+time $HOME/pgsql/bin/psql sim -c 'select count(*) from restaurantaddress ra, addressphone ap where levenshtein_distance(ra.address, ap.address) < 4;'

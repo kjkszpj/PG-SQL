@@ -42,7 +42,7 @@ static TypeFuncClass get_type_func_class(Oid typid);
 // mine start here
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
 {
-	int min(int a, int b) {return a < b ? a : b;}
+	inline int min(int a, int b) {return a < b ? a : b;}
 	
 	text *txt_01 = PG_GETARG_TEXT_P(0);
 	text *txt_02 = PG_GETARG_TEXT_P(1);
@@ -54,6 +54,7 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 		for (i = 0; i < VARSIZE(str_01); i++) elog(LOG, "data at %d\t%d", i, VARDATA(str_01)[i]);
 		PG_RETURN_INT32(result);
 	*/
+	char c1, c2;
 	int i, j;
 	int n1 = VARSIZE(txt_01) - VARHDRSZ;
 	int n2 = VARSIZE(txt_02) - VARHDRSZ;
@@ -70,9 +71,8 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 			if (j > 0) f[i][j] = min(f[i][j], f[i][j - 1] + 1);
 			if (i > 0 && j > 0)
 			{
-				char c1 = VARDATA(txt_01)[i - 1];
-				char c2 = VARDATA(txt_02)[j - 1];
-				elog(LOG, "%c vs %c", c1, c2);
+				c1 = VARDATA(txt_01)[i - 1];
+				c2 = VARDATA(txt_02)[j - 1];
 				if (c1 == c2) f[i][j] = min(f[i][j], f[i - 1][j - 1]); else f[i][j] = min(f[i][j], f[i - 1][j - 1] + 1);
 			}
 		}
