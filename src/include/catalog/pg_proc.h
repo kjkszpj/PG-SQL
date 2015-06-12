@@ -127,8 +127,13 @@ typedef FormData_pg_proc *Form_pg_proc;
  *		"less-equal-greater" for B-tree comparison functions
  */
 
+// mine start here
+
 DATA(insert OID = 4375 (  levenshtein_distance     PGNSP PGUID 12 1 0 0 f f f t f i 2 0 20 "25 25" _null_ _null_ _null_ _null_ levenshtein_distance _null_ _null_ _null_ ));
 DESCR("levenshtein_distance");
+
+DATA(insert OID = 4399 ( levenshtein_fast		   PGNSP PGUID 12 1 0 0 f f f t f i 2 0 20 "25 25 20" _null_ _null_ _null_ _null_ levenshtein_fast  _null_ _null_ _null_ ));
+
 DATA(insert OID = 4376 ( jaccard_index		   PGNSP PGUID 12 1 0 0 f f f t f i 2 0 700 "25 25" _null_ _null_ _null_ _null_ jaccard_index _null_ _null_ _null_ ));
 DESCR("jaccard index");
 

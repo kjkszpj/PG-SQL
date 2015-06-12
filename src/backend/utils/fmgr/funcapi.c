@@ -40,6 +40,14 @@ static bool resolve_polymorphic_tupdesc(TupleDesc tupdesc,
 static TypeFuncClass get_type_func_class(Oid typid);
 
 // mine start here
+
+Datum levenshtein_fast(PG_FUNCTION_ARGS)
+{
+	text *s1 = PG_GETARG_TEXT_P(0);
+	text *s2 = PG_GETARG_TEXT_P(1);
+	PG_RETURN_INT32(0);
+}
+
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
 {
 	inline int min(int a, int b) {return a < b ? a : b;}
