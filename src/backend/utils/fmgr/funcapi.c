@@ -44,8 +44,8 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 {
 	int min(int a, int b) {return a < b ? a : b;}
 	
-	text *txt_01 = PG_GETARG_DATUM(0);
-	text *txt_02 = PG_GETARG_DATUM(1);
+	text *txt_01 = PG_GETARG_TEXT_P(0);
+	text *txt_02 = PG_GETARG_TEXT_P(1);
 	/*
 		int32 result=233;
 		int i;
@@ -59,8 +59,7 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 	int n2 = VARSIZE(txt_02) - VARHDRSZ;
 	int f[n1 + 10][n2 + 10];
 	int OO = 1000000000;
-	
-	memset(f, 0, sizeof(f));
+
 	for (i = 0; i <= n1; i++)
 		for (j = 0; j <= n2; j++) f[i][j] = OO;
 	f[0][0] = 0;
