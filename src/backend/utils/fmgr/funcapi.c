@@ -88,12 +88,12 @@ Datum levenshtein_fast(PG_FUNCTION_ARGS)
 			}
 		}
 		if (f2_start == -1) PG_RETURN_INT32(maxd + 1);
-		while (f2[f2_end] > maxd) f2_end--;
+		while (f2[f2_end - f2_start] > maxd) f2_end--;
 		f1_start = f2_start;
 		f1_end = f2_end;
 		memcpy(f1, f2, sizeof(f1));
 	}
-	PG_RETURN_INT32(f2[n2 - f2_start]);
+	if (n2 > f2_end) PG_RETURN_INT32(maxd + 1); else PG_RETURN_INT32(f2[n2 - f2_start]);
 }
 
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
