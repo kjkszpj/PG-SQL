@@ -78,6 +78,8 @@ Datum levenshtein_fast(PG_FUNCTION_ARGS)
 			{
 				c1 = VARDATA(s1)[i - 1];
 				c2 = VARDATA(s2)[j - 1];
+				if (c1 >= 'a' && c1 <= 'z') c1 = c1 - 'a' + 'A';
+				if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
 				if (c1 == c2) temp = min(temp, f1[j - 1 - f1_start]); else temp = min(temp, f1[j - 1 - f1_start] + 1);
 			}
 			if (f2_start != -1 || temp <= maxd)
@@ -122,6 +124,8 @@ Datum levenshtein_distance(PG_FUNCTION_ARGS)
 			{
 				c1 = VARDATA(txt_01)[i - 1];
 				c2 = VARDATA(txt_02)[j - 1];
+				if (c1 >= 'a' && c1 <= 'z') c1 = c1 - 'a' + 'A';
+				if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
 				if (c1 == c2) f[i][j] = min(f[i][j], f[i - 1][j - 1]); else f[i][j] = min(f[i][j], f[i - 1][j - 1] + 1);
 			}
 		}
@@ -147,7 +151,12 @@ Datum jaccard_index (PG_FUNCTION_ARGS)
 	memset(setb, false, sizeof(setb));
 	for (i = 0; i < n1 + 1; i++)
 	{
-		if (i < n1) c2 = VARDATA(txt_01)[i]; else c2 = 7;
+		if (i < n1)
+		{
+			c2 = VARDATA(txt_01)[i];
+			if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
+		}
+		else c2 = 7;
 		j = (c1 << 7) + c2;
 		if (!seta[j])
 		{

@@ -7,10 +7,15 @@
 
 ---
 
+##DONE
+-	levenshtein distance
+-	jaccard index
+-	levenshtein fast
+-	case insensitive
+
 ##TODO
--	加速levenshtein_distance
--	实现jaccard_index
--	(optional)实现块嵌套循环连接
+-	实现块嵌套循环连接
+-	report
 
 ---
 

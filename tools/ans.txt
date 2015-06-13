@@ -1,26 +1,32 @@
 select count(*) from restaurantphone rp, addressphone ap where levenshtein_distance(rp.phone, ap.phone) < 4;
 3252
+3252(case insensitive)
 distance	0m33s
 fast		0m9.242s
 
 select count(*) from restaurantaddress ra, restaurantphone rp where levenshtein_distance(ra.name, rp.name) < 3;
 2112
+2128(case insensitive)
 distance	1m08s
 fast		0m5.889s
 
 select count(*) from restaurantaddress ra, addressphone ap where levenshtein_distance(ra.address, ap.address) < 4;
 2582
+2592(case insensitive)
 distance	2m23s
 fast		0m8.575s
 
 select count(*) from restaurantphone rp, addressphone ap where jaccard_index(rp.phone, ap.phone) > .6;
 1653
+1653(case insensitive)
 0m10.8s
 
 select count(*) from restaurantaddress ra, restaurantphone rp where jaccard_index(ra.name, rp.name) > .65;
 2347
+16(case insensitive)
 0m12.322s
 
 select count(*) from restaurantaddress ra, addressphone ap where jaccard_index(ra.address, ap.address) > .8;
 2199
+0(case insensitive)
 0m12.895s
