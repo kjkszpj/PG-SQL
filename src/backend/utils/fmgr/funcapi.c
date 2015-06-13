@@ -43,10 +43,57 @@ static TypeFuncClass get_type_func_class(Oid typid);
 
 Datum levenshtein_fast(PG_FUNCTION_ARGS)
 {
+	inline int max(int a, int b) {return a > b ? a : b;}
+	inline int min(int a, int b) {return a < b ? a : b;}
+
 	text *s1 = PG_GETARG_TEXT_P(0);
 	text *s2 = PG_GETARG_TEXT_P(1);
 	int maxd = PG_GETARG_INT32(2);
-	PG_RETURN_INT32(maxd);
+
+	char c1, c2;
+
+	int i, j, temp;
+	int n1 = VARSIZE(s1) - VARHDRSZ;
+	int n2 = VARSIZE(s2) - VARHDRSZ;
+	int f1[n2], f2[n2];
+	int f1_start, f1_end, f2_start, f2_end;
+	
+	memset(f1, 0, sizeof(f1));
+	for (i = 0; i <= min(maxd, n2); i++) f1[i] = i;
+	f1_start = 0;
+	f1_end = min(maxd, n2);
+
+	for (i = 1; i <= n1; i++)
+	{
+		memset(f2, 0, sizeof(f2));
+		f2_start = -1;
+		f2_end = 0;
+		for (j = f1_start; j <= min(f1_end + 1, n2); j++)
+		{
+			temp = maxd + 1;
+			if (j <= f1_end) temp = min(temp, f1[j - f1_start] + 1);		//f[i - 1][j] + 1;
+			if (f2_start != -1) temp = min(temp, f2[j - 1 - f2_start] + 1);	//f[i][j - 1] + 1;
+			//	f[i - 1][j - 1] + 1/0;
+			if (j > f1_start)
+			{
+				c1 = VARDATA(s1)[i - 1];
+				c2 = VARDATA(s2)[j - 1];
+				if (c1 == c2) temp = min(temp, f1[j - 1 - f1_start]); else temp = min(temp, f1[j - 1 - f1_start] + 1);
+			}
+			if (f2_start != -1 || temp <= maxd)
+			{
+				if (f2_start == -1) f2_start = j;
+				f2[j - f2_start] = temp;
+				f2_end = j;
+			}
+		}
+		if (f2_start == -1) PG_RETURN_INT32(maxd + 1);
+		while (f2[f2_end] > maxd) f2_end--;
+		f1_start = f2_start;
+		f1_end = f2_end;
+		memcpy(f1, f2, sizeof(f1));
+	}
+	PG_RETURN_INT32(f2[n2 - f2_start]);
 }
 
 Datum levenshtein_distance(PG_FUNCTION_ARGS)
