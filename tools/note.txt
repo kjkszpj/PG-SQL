@@ -11,3 +11,7 @@ for text:
 	see char.c
 	http://www.postgresql.org/docs/9.3/static/xfunc-c.html
 	postgres.h
+	
+for blocknestloop
+	每个node的innernode和outernode都是一个plan?
+	在需要的时候再去生成tuple?
