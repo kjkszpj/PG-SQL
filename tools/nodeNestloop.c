@@ -120,19 +120,42 @@ ExecNestLoop(NestLoopState *node)
 
 		// mine starts here
 		// fetch new "block"
+		if (node->nl_NeedNewOuterBlock)
+		{
+			int i;
+
+			elog(LOG, "fetching new outer block");
+			for (i = 0; i < node->nl_BlockSize; i++)
+			{
+				node->nl_Block[i] = ExecProcNode(outerPlan);
+				if (TupIsNull(node->nl_Block[i]))
+				{
+					elog(LOG, "not enough outer tuple");
+					break;
+				}
+			}
+			node->nl_CntOuter = i;
+			if (i == 0)
+			{
+				elog(LOG, "no outer tuple, ending join");
+				return NULL;
+			}
+			node->nl_iOuter = 0;
+			node->nl_NeedNewOuterBlock = false;
+		}
+
+		// newouter?
 		if (node->nl_NeedNewOuter)
 		{
 			ENL1_printf("getting new outer tuple");
-			outerTupleSlot = ExecProcNode(outerPlan);
-
-			/*
-			 * if there are no more outer tuples, then the join is complete..
-			 */
-			if (TupIsNull(outerTupleSlot))
+			if (node->nl_iOuter >= node->nl_CntOuter)
 			{
-				ENL1_printf("no outer tuple, ending join");
-				return NULL;
+				node->nl_NeedNewOuterBlock = true;
+				continue;
 			}
+			outerTupleSlot = ExecInitNullTupleSlot(node->js.ps.state, 
+								 ExecGetResultType(outerPlanState(node)));
+			outerTupleSlot = node->nl_Block[node->nl_iOuter++];
 
 			ENL1_printf("saving new outer tuple information");
 			econtext->ecxt_outertuple = outerTupleSlot;
@@ -379,11 +402,15 @@ ExecInitNestLoop(NestLoop *node, EState *estate, int eflags)
 	nlstate->nl_MatchedOuter = false;
 	
 	// mine starts here
+	nlstate->nl_NeedNewOuterBlock = true;
 	nlstate->nl_BlockSize = 8;
 	nlstate->nl_CntOuter = 0;
 	nlstate->nl_iOuter = 0;
 	nlstate->nl_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nlstate->nl_BlockSize + 10));
-	nlstate->nl_NeedNewOuterBlock = true;
+	int i;
+	for (i = 0; i < nl_BlockSize; i++)
+		nlstate->nl_Block[i] = ExecInitNullTupleSlot(estate
+								 ExecGetResultType(outerPlanState(nlstate)));
 
 	NL1_printf("ExecInitNestLoop: %s\n",
 			   "node initialized");
