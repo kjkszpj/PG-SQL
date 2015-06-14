@@ -144,12 +144,11 @@ Datum jaccard_index (PG_FUNCTION_ARGS)
 	int n2 = VARSIZE(txt_02) - VARHDRSZ;
 
 	// enough for ASCII in this problem
-	bool seta[65540];
-	bool setb[65540];
+	bool seta[16384];
+	bool setb[16384];
 
 	memset(seta, false, sizeof(seta));
 	memset(setb, false, sizeof(setb));
-	c1 = 7;
 	for (i = 0; i < n1 + 1; i++)
 	{
 		if (i < n1)
@@ -158,7 +157,7 @@ Datum jaccard_index (PG_FUNCTION_ARGS)
 			if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
 		}
 		else c2 = 7;
-		j = c1 * 256 + c2;
+		j = (c1 << 7) + c2;
 		if (!seta[j])
 		{
 			seta[j] = true;
@@ -166,28 +165,22 @@ Datum jaccard_index (PG_FUNCTION_ARGS)
 		}
 		c1 = c2;
 	}
-	c1 = 7;
 	for (i = 0; i < n2 + 1; i++)
 	{
-		if (i < n2)	
+		if (i < n2)
 		{
 			c2 = VARDATA(txt_02)[i];
 			if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
 		}
 		else c2 = 7;
-		j = c1 * 256 + c2;
+		j = (c1 << 7) + c2;
 		if (!setb[j])
 		{
 			setb[j] = true;
+			if (seta[j]) cnt_and++;
+			else cnt_or++;
 		}
 		c1 = c2;
-	}
-	cnt_and = 0;
-	cnt_or = 0;
-	for (i = 0; i < 65540; i++)
-	{
-		if (seta[i] || setb[i]) cnt_or++;
-		if (seta[i] && setb[i]) cnt_and++;
 	}
 	if (cnt_or == 0) PG_RETURN_FLOAT4(0);
 	PG_RETURN_FLOAT4(cnt_and * 1.0 / cnt_or);
