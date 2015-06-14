@@ -110,7 +110,7 @@ ExecNestLoop(NestLoopState *node)
 	 * qualifying join tuple.
 	 */
 	ENL1_printf("entering main loop");
-	elog(LOG, "------Let's rock baby!");
+	//elog(LOG, "------Let's rock baby!");
 	for (;;)
 	{
 		/*
@@ -124,20 +124,28 @@ ExecNestLoop(NestLoopState *node)
 		{
 			int i;
 
-			elog(LOG, "------ok, fetching new outer block");
+			//elog(LOG, "------ok, fetching new outer block");
+			if (node->you_CntOuter < node->you_BlockSize)
+			{
+				//elog(LOG, "---rain, I think it's end here.");
+				return NULL;
+			}
 			for (i = 0; i < node->you_BlockSize; i++)
 			{
-				node->you_Block[i] = ExecProcNode(outerPlan);
-				if (TupIsNull(node->you_Block[i]))
+				outerTupleSlot = ExecProcNode(outerPlan);
+				//elog(LOG, "---what about %d", i);
+				if (TupIsNull(outerTupleSlot))
 				{
-					elog(LOG, "------not enough outer tuple");
+					//elog(LOG, "------not enough outer tuple");
 					break;
 				}
+				ExecCopySlot(node->you_Block[i], outerTupleSlot);
 			}
 			node->you_CntOuter = i;
+			//elog(LOG, "%d", i);
 			if (i == 0)
 			{
-				elog(LOG, "no outer tuple, ending join");
+				//elog(LOG, "no outer tuple, ending join");
 				return NULL;
 			}
 			node->you_iOuter = 0;
@@ -148,7 +156,8 @@ ExecNestLoop(NestLoopState *node)
 			// get all parameter? wrong here!
 			for (i = 0; i < node->you_CntOuter; i++)
 			{
-				outerTupleSlot = ExecCopySlot(outerTupleSlot, node->you_Block[i]);
+				Assert(!TupIsNull(node->you_Block[i]));
+				ExecCopySlot(outerTupleSlot, node->you_Block[i]);
 				foreach(lc, nl->nestParams)
 				{
 					NestLoopParam *nlp = (NestLoopParam *) lfirst(lc);
@@ -169,19 +178,20 @@ ExecNestLoop(NestLoopState *node)
 				}
 			}
 			// rescan inner plan here
-			elog(LOG, "rescanning inner plan");
+			//elog(LOG, "rescanning inner plan");
 			ExecReScan(innerPlan);
 		}
 		
 		// well, fetch new inner tuple
 		if (node->you_NeedNewInner)
-		{
+		{	
+			//elog(LOG, "fetching inner tuple");
 			innerTupleSlot = ExecProcNode(innerPlan);
 			node->you_NeedNewInner = false;
 			if (TupIsNull(innerTupleSlot))
 			{
 				int i;
-				elog(LOG, "no inner tuple, need new outer block");
+				//elog(LOG, "no inner tuple, need new outer block");
 				// TODO block join fro left and anti
 				if (node->js.jointype == JOIN_LEFT || node->js.jointype == JOIN_ANTI)
 					for (i = 0; i < node->you_CntOuter; i++)
@@ -226,7 +236,7 @@ ExecNestLoop(NestLoopState *node)
 		if (node->you_iOuter >= node->you_CntOuter)
 		{
 			node->you_NeedNewInner = true;
-			break;
+			continue;
 		}
 		outerTupleSlot = node->you_Block[node->you_iOuter++];
 		Assert(!TupIsNull(outerTupleSlot));
@@ -268,6 +278,7 @@ ExecNestLoop(NestLoopState *node)
 		ENL1_printf("qualification failed, looping");
 		// ------mine ends here
 	}
+	return NULL;
 }
 
 /* ----------------------------------------------------------------
@@ -369,9 +380,9 @@ ExecInitNestLoop(NestLoop *node, EState *estate, int eflags)
 	nlstate->you_NeedNewOuterBlock = true;
 	nlstate->you_NeedNewInner = false;
 	nlstate->you_NeedNewOuter = false;
-	nlstate->you_BlockSize = 8;
-	nlstate->you_CntOuter = 0;
-	nlstate->you_iOuter = 0;
+	nlstate->you_BlockSize = 128;
+	nlstate->you_CntOuter = nlstate->you_BlockSize;
+	nlstate->you_iOuter = nlstate->you_CntOuter + 1;
 	// construct block
 	nlstate->you_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nlstate->you_BlockSize + 10));
 	for (i = 0; i < nlstate->you_BlockSize; i++)
