@@ -1,3 +1,4 @@
 #!/bin/bash
+rm logfile
 ./stop_pgsql
 ./start_pgsql

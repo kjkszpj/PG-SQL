@@ -1,5 +1,9 @@
+## mine start here
 # about pgsql
 logfile
+
+# about gvim
+*.swp
 
 # Object files
 *.o
