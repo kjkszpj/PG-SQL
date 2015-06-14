@@ -124,28 +124,26 @@ ExecNestLoop(NestLoopState *node)
 		{
 			int i;
 
-			//elog(LOG, "------ok, fetching new outer block");
+			elog(LOG, "------ok, fetching new outer block");
 			if (node->you_CntOuter < node->you_BlockSize)
 			{
-				//elog(LOG, "---rain, I think it's end here.");
+				elog(LOG, "---rain, I think it's end here.");
 				return NULL;
 			}
 			for (i = 0; i < node->you_BlockSize; i++)
 			{
 				outerTupleSlot = ExecProcNode(outerPlan);
-				//elog(LOG, "---what about %d", i);
 				if (TupIsNull(outerTupleSlot))
 				{
-					//elog(LOG, "------not enough outer tuple");
+					elog(LOG, "------not enough outer tuple");
 					break;
 				}
 				ExecCopySlot(node->you_Block[i], outerTupleSlot);
 			}
 			node->you_CntOuter = i;
-			//elog(LOG, "%d", i);
 			if (i == 0)
 			{
-				//elog(LOG, "no outer tuple, ending join");
+				elog(LOG, "no outer tuple, ending join");
 				return NULL;
 			}
 			node->you_iOuter = 0;
@@ -178,7 +176,7 @@ ExecNestLoop(NestLoopState *node)
 				}
 			}
 			// rescan inner plan here
-			//elog(LOG, "rescanning inner plan");
+			elog(LOG, "rescanning inner plan");
 			ExecReScan(innerPlan);
 		}
 		
@@ -191,6 +189,7 @@ ExecNestLoop(NestLoopState *node)
 			if (TupIsNull(innerTupleSlot))
 			{
 				int i;
+				
 				//elog(LOG, "no inner tuple, need new outer block");
 				// TODO block join fro left and anti
 				if (node->js.jointype == JOIN_LEFT || node->js.jointype == JOIN_ANTI)
