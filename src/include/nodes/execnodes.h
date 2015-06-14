@@ -1465,11 +1465,14 @@ typedef struct NestLoopState
 	TupleTableSlot *nl_NullInnerTupleSlot;
 
 	// mine starts here
-	bool		nl_NeedNewOuterBlock;
-	int 		nl_BlockSize;
-	int			nl_CntOuter;
-	int			nl_iOuter;
-	TupleTableSlot **nl_Block;
+	bool		you_NeedNewOuterBlock;
+	bool 		you_NeedNewInner;
+	bool		you_NeedNewOuter;
+	int 		you_BlockSize;
+	int			you_CntOuter;
+	int			you_iOuter;
+	TupleTableSlot **you_Block;
+	bool 		*you_BlockMatched;
 } NestLoopState;
 
 /* ----------------

@@ -110,7 +110,7 @@ ExecNestLoop(NestLoopState *node)
 	 * qualifying join tuple.
 	 */
 	ENL1_printf("entering main loop");
-
+	elog(LOG, "------Let's rock baby!");
 	for (;;)
 	{
 		/*
@@ -118,141 +118,127 @@ ExecNestLoop(NestLoopState *node)
 		 * inner scan.
 		 */
 
-		// mine starts here
-		// fetch new "block"
-		if (node->nl_NeedNewOuter)
+		// ------mine starts here
+		// fetch new outer "block"
+		if (node->you_NeedNewOuterBlock)
 		{
-			ENL1_printf("getting new outer tuple");
-			outerTupleSlot = ExecProcNode(outerPlan);
+			int i;
 
-			/*
-			 * if there are no more outer tuples, then the join is complete..
-			 */
-			if (TupIsNull(outerTupleSlot))
+			elog(LOG, "------ok, fetching new outer block");
+			for (i = 0; i < node->you_BlockSize; i++)
 			{
-				ENL1_printf("no outer tuple, ending join");
-				return NULL;
-			}
-
-			ENL1_printf("saving new outer tuple information");
-			econtext->ecxt_outertuple = outerTupleSlot;
-			node->nl_NeedNewOuter = false;
-			node->nl_MatchedOuter = false;
-
-			/*
-			 * fetch the values of any outer Vars that must be passed to the
-			 * inner scan, and store them in the appropriate PARAM_EXEC slots.
-			 */
-			foreach(lc, nl->nestParams)
-			{
-				NestLoopParam *nlp = (NestLoopParam *) lfirst(lc);
-				int			paramno = nlp->paramno;
-				ParamExecData *prm;
-
-				prm = &(econtext->ecxt_param_exec_vals[paramno]);
-				/* Param value should be an OUTER var */
-				Assert(IsA(nlp->paramval, Var));
-				Assert(nlp->paramval->varno == OUTER);
-				Assert(nlp->paramval->varattno > 0);
-				prm->value = slot_getattr(outerTupleSlot,
-										  nlp->paramval->varattno,
-										  &(prm->isnull));
-				/* Flag parameter value as changed */
-				innerPlan->chgParam = bms_add_member(innerPlan->chgParam,
-													 paramno);
-			}
-
-			/*
-			 * now rescan the inner plan
-			 */
-			ENL1_printf("rescanning inner plan");
-			ExecReScan(innerPlan);
-		}
-
-		/*
-		 * we have an outerTuple, try to get the next inner tuple.
-		 */
-		ENL1_printf("getting new inner tuple");
-
-		innerTupleSlot = ExecProcNode(innerPlan);
-		econtext->ecxt_innertuple = innerTupleSlot;
-
-		if (TupIsNull(innerTupleSlot))
-		{
-			ENL1_printf("no inner tuple, need new outer tuple");
-
-			node->nl_NeedNewOuter = true;
-
-			if (!node->nl_MatchedOuter &&
-				(node->js.jointype == JOIN_LEFT ||
-				 node->js.jointype == JOIN_ANTI))
-			{
-				/*
-				 * We are doing an outer join and there were no join matches
-				 * for this outer tuple.  Generate a fake join tuple with
-				 * nulls for the inner tuple, and return it if it passes the
-				 * non-join quals.
-				 */
-				econtext->ecxt_innertuple = node->nl_NullInnerTupleSlot;
-
-				ENL1_printf("testing qualification for outer-join tuple");
-
-				if (otherqual == NIL || ExecQual(otherqual, econtext, false))
+				node->you_Block[i] = ExecProcNode(outerPlan);
+				if (TupIsNull(node->you_Block[i]))
 				{
-					/*
-					 * qualification was satisfied so we project and return
-					 * the slot containing the result tuple using
-					 * ExecProject().
-					 */
-					TupleTableSlot *result;
-					ExprDoneCond isDone;
-
-					ENL1_printf("qualification succeeded, projecting tuple");
-
-					result = ExecProject(node->js.ps.ps_ProjInfo, &isDone);
-
-					if (isDone != ExprEndResult)
-					{
-						node->js.ps.ps_TupFromTlist =
-							(isDone == ExprMultipleResult);
-						return result;
-					}
+					elog(LOG, "------not enough outer tuple");
+					break;
 				}
 			}
-
-			/*
-			 * Otherwise just return to top of loop for a new outer tuple.
-			 */
-			continue;
+			node->you_CntOuter = i;
+			if (i == 0)
+			{
+				elog(LOG, "no outer tuple, ending join");
+				return NULL;
+			}
+			node->you_iOuter = 0;
+			node->you_NeedNewOuterBlock = false;
+			node->you_NeedNewInner = true;
+			node->you_NeedNewOuter = false;
+			memset(node->you_BlockMatched, false, sizeof(node->you_BlockMatched));
+			// get all parameter? wrong here!
+			for (i = 0; i < node->you_CntOuter; i++)
+			{
+				outerTupleSlot = ExecCopySlot(outerTupleSlot, node->you_Block[i]);
+				foreach(lc, nl->nestParams)
+				{
+					NestLoopParam *nlp = (NestLoopParam *) lfirst(lc);
+					int			paramno = nlp->paramno;
+					ParamExecData *prm;
+	
+					prm = &(econtext->ecxt_param_exec_vals[paramno]);
+					/* Param value should be an OUTER var */
+					Assert(IsA(nlp->paramval, Var));
+					Assert(nlp->paramval->varno == OUTER);
+					Assert(nlp->paramval->varattno > 0);
+					prm->value = slot_getattr(outerTupleSlot,
+											  nlp->paramval->varattno,
+											  &(prm->isnull));
+					/* Flag parameter value as changed */
+					innerPlan->chgParam = bms_add_member(innerPlan->chgParam,
+														 paramno);
+				}
+			}
+			// rescan inner plan here
+			elog(LOG, "rescanning inner plan");
+			ExecReScan(innerPlan);
+		}
+		
+		// well, fetch new inner tuple
+		if (node->you_NeedNewInner)
+		{
+			innserTupleSlot = ExecProcNode(innerPlan);
+			node->you_NeedNewInner = false;
+			if (TupIsNull(innserTupleSlot))
+			{
+				int i;
+				elog(LOG, "no inner tuple, need new outer block");
+				// TODO block join fro left and anti
+				if (node->js.jointype == JOIN_LEFT || node->js.jointype == JOIN_ANTI)
+					for (i = 0; i < node->you_CntOut; i++)
+					{
+						if (node->you_MatchedOuter[i]) continue;
+						ResetExprContext(econtext);
+						econtext->ecxt_outertuple = node->you_Block[i];
+						econtext->ecxt_innertuple = node->nl_NullInnerTupleSlot;
+						ENL1_printf("testing qualification for outer-join tuple");
+	
+						if (otherqual == NIL || ExecQual(otherqual, econtext, false))
+						{
+							/*
+							 * qualification was satisfied so we project and return
+							 * the slot containing the result tuple using
+							 * ExecProject().
+							 */
+							TupleTableSlot *result;
+							ExprDoneCond isDone;
+	
+							ENL1_printf("qualification succeeded, projecting tuple");
+	
+							result = ExecProject(node->js.ps.ps_ProjInfo, &isDone);
+	
+							if (isDone != ExprEndResult)
+							{
+								node->js.ps.ps_TupFromTlist =
+									(isDone == ExprMultipleResult);
+								node->you_MatchedOuter[i] = true;
+								return result;
+							}
+						}
+					}
+				node->you_NeedNewOuterBlock = true;
+				continue;
+			}
+			econtext->ecxt_innertuple = innerTupleSlot;
+			node->you_iOuter = 0;
 		}
 
-		/*
-		 * at this point we have a new pair of inner and outer tuples so we
-		 * test the inner and outer tuples to see if they satisfy the node's
-		 * qualification.
-		 *
-		 * Only the joinquals determine MatchedOuter status, but all quals
-		 * must pass to actually return the tuple.
-		 */
+		// now fetch new outer tuple from block
+		if (node->you_iOuter >= node->you_CntOuter)
+		{
+			node->you_NeedNewInner = true;
+			break;
+		}
+		outerTupleSlot = node->you_Block[node->you_iOuter++];
+		Assert(!TupIsNull(outerTupleSlot));
+		econtext->ecxt_outertuple = outerTupleSlot;
 		ENL1_printf("testing qualification");
 
 		if (ExecQual(joinqual, econtext, false))
-		{
-			node->nl_MatchedOuter = true;
+		{		
+			bool canreturn = false;
 
-			/* In an antijoin, we never return a matched tuple */
-			if (node->js.jointype == JOIN_ANTI)
-			{
-				node->nl_NeedNewOuter = true;
-				continue;		/* return to top of loop */
-			}
-
-			/*
-			 * In a semijoin, we'll consider returning the first match, but
-			 * after that we're done with this outer tuple.
-			 */
-			if (node->js.jointype == JOIN_SEMI)
-				node->nl_NeedNewOuter = true;
+			TupleTableSlot *result;
+			ExprDoneCond isDone;
 
 			if (otherqual == NIL || ExecQual(otherqual, econtext, false))
 			{
@@ -260,8 +246,6 @@ ExecNestLoop(NestLoopState *node)
 				 * qualification was satisfied so we project and return the
 				 * slot containing the result tuple using ExecProject().
 				 */
-				TupleTableSlot *result;
-				ExprDoneCond isDone;
 
 				ENL1_printf("qualification succeeded, projecting tuple");
 
@@ -269,19 +253,20 @@ ExecNestLoop(NestLoopState *node)
 
 				if (isDone != ExprEndResult)
 				{
-					node->js.ps.ps_TupFromTlist =
-						(isDone == ExprMultipleResult);
-					return result;
+					node->js.ps.ps_TupFromTlist = (isDone == ExprMultipleResult);
+					canreturn = true;
 				}
 			}
+			// TODO too slow for JOIN_ANTI
+			if (node->js.jointype == JOIN_ANTI && node->you_MatchOuter[node->you_iOuter - 1]) continue;
+			node->you_MatchOuter[node->you_iOuter - 1] = true;
+			if (canreturn) return result;
 		}
-
-		/*
-		 * Tuple fails qual, so free per-tuple memory and try again.
-		 */
+		
+		// tuple fails qual
 		ResetExprContext(econtext);
-
 		ENL1_printf("qualification failed, looping");
+		// ------mine ends here
 	}
 }
 
@@ -378,12 +363,24 @@ ExecInitNestLoop(NestLoop *node, EState *estate, int eflags)
 	nlstate->nl_NeedNewOuter = true;
 	nlstate->nl_MatchedOuter = false;
 	
-	// mine starts here
-	nlstate->nl_BlockSize = 8;
-	nlstate->nl_CntOuter = 0;
-	nlstate->nl_iOuter = 0;
-	nlstate->nl_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nlstate->nl_BlockSize + 10));
-	nlstate->nl_NeedNewOuterBlock = true;
+	// ------mine starts here
+	int i;
+
+	nlstate->you_NeedNewOuterBlock = true;
+	nlstate->you_NeedNewInner = false;
+	nlstate->you_NeedNewOuter = false;
+	nlstate->you_BlockSize = 8;
+	nlstate->you_CntOuter = 0;
+	nlstate->you_iOuter = 0;
+	// construct block
+	nlstate->you_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nl_state->you_BlockSize + 10));
+	for (i = 0; i < nlstate->you_BlockSize; i++)
+		nlstate->you_Block[i] = 
+			ExecInitNullTupleSlot(estate,
+				ExecGetResultType(outerPlanState(nlstate)));
+	nlstate->you_BlockMatched = (bool*) malloc(sizeof(bool) * (nl_state->you_BlockSize + 10));
+	memset(nlstate->you_BlockMatched, false, sizeof(nlstate->you_BlockMatched));
+	// ------mine ends here
 
 	NL1_printf("ExecInitNestLoop: %s\n",
 			   "node initialized");
@@ -407,8 +404,10 @@ ExecEndNestLoop(NestLoopState *node)
 	 */
 	ExecFreeExprContext(&node->js.ps);
 
-	// mine starts here
-	free(node->nl_Block);
+	// ------mine starts here
+	free(node->you_Block);
+	free(node->you_BlockMatched);
+	// ------mine ends here
 
 	/*
 	 * clean out the tuple table
@@ -451,7 +450,9 @@ ExecReScanNestLoop(NestLoopState *node)
 	node->nl_NeedNewOuter = true;
 	node->nl_MatchedOuter = false;
 
-	// mine starts here
-	node->nl_NeedNewOuterBlock = true;
-	node->nl_CntOuter = 0;
+	// ------mine starts here
+	node->you_NeedNewOuterBlock = true;
+	node->you_NeedNewInner = false;
+	node->you_NeedNewOuter = false;
+	// ------mine ends here
 }
