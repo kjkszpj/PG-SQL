@@ -176,17 +176,17 @@ ExecNestLoop(NestLoopState *node)
 		// well, fetch new inner tuple
 		if (node->you_NeedNewInner)
 		{
-			innserTupleSlot = ExecProcNode(innerPlan);
+			innerTupleSlot = ExecProcNode(innerPlan);
 			node->you_NeedNewInner = false;
-			if (TupIsNull(innserTupleSlot))
+			if (TupIsNull(innerTupleSlot))
 			{
 				int i;
 				elog(LOG, "no inner tuple, need new outer block");
 				// TODO block join fro left and anti
 				if (node->js.jointype == JOIN_LEFT || node->js.jointype == JOIN_ANTI)
-					for (i = 0; i < node->you_CntOut; i++)
+					for (i = 0; i < node->you_CntOuter; i++)
 					{
-						if (node->you_MatchedOuter[i]) continue;
+						if (node->you_BlockMatched[i]) continue;
 						ResetExprContext(econtext);
 						econtext->ecxt_outertuple = node->you_Block[i];
 						econtext->ecxt_innertuple = node->nl_NullInnerTupleSlot;
@@ -210,7 +210,7 @@ ExecNestLoop(NestLoopState *node)
 							{
 								node->js.ps.ps_TupFromTlist =
 									(isDone == ExprMultipleResult);
-								node->you_MatchedOuter[i] = true;
+								node->you_BlockMatched[i] = true;
 								return result;
 							}
 						}
@@ -258,8 +258,8 @@ ExecNestLoop(NestLoopState *node)
 				}
 			}
 			// TODO too slow for JOIN_ANTI
-			if (node->js.jointype == JOIN_ANTI && node->you_MatchOuter[node->you_iOuter - 1]) continue;
-			node->you_MatchOuter[node->you_iOuter - 1] = true;
+			if (node->js.jointype == JOIN_ANTI && node->you_BlockMatched[node->you_iOuter - 1]) continue;
+			node->you_BlockMatched[node->you_iOuter - 1] = true;
 			if (canreturn) return result;
 		}
 		
@@ -373,12 +373,12 @@ ExecInitNestLoop(NestLoop *node, EState *estate, int eflags)
 	nlstate->you_CntOuter = 0;
 	nlstate->you_iOuter = 0;
 	// construct block
-	nlstate->you_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nl_state->you_BlockSize + 10));
+	nlstate->you_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nlstate->you_BlockSize + 10));
 	for (i = 0; i < nlstate->you_BlockSize; i++)
 		nlstate->you_Block[i] = 
 			ExecInitNullTupleSlot(estate,
 				ExecGetResultType(outerPlanState(nlstate)));
-	nlstate->you_BlockMatched = (bool*) malloc(sizeof(bool) * (nl_state->you_BlockSize + 10));
+	nlstate->you_BlockMatched = (bool*) malloc(sizeof(bool) * (nlstate->you_BlockSize + 10));
 	memset(nlstate->you_BlockMatched, false, sizeof(nlstate->you_BlockMatched));
 	// ------mine ends here
 
