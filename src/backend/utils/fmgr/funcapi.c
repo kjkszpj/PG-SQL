@@ -154,6 +154,7 @@ Datum jaccard_index (PG_FUNCTION_ARGS)
 		if (i < n1)
 		{
 			c2 = VARDATA(txt_01)[i];
+			if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
 		}
 		else c2 = 7;
 		j = (c1 << 7) + c2;
@@ -166,7 +167,12 @@ Datum jaccard_index (PG_FUNCTION_ARGS)
 	}
 	for (i = 0; i < n2 + 1; i++)
 	{
-		if (i < n2)	c2 = VARDATA(txt_02)[i]; else c2 = 7;
+		if (i < n2)
+		{
+			c2 = VARDATA(txt_02)[i];
+			if (c2 >= 'a' && c2 <= 'z') c2 = c2 - 'a' + 'A';
+		}
+		else c2 = 7;
 		j = (c1 << 7) + c2;
 		if (!setb[j])
 		{

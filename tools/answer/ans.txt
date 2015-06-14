@@ -23,12 +23,12 @@ select count(*) from restaurantphone rp, addressphone ap where jaccard_index(rp.
 
 select count(*) from restaurantaddress ra, restaurantphone rp where jaccard_index(ra.name, rp.name) > .65;
 2347
-16(case insensitive)
+2398(case insensitive)
 0m12.322s
 
 select count(*) from restaurantaddress ra, addressphone ap where jaccard_index(ra.address, ap.address) > .8;
 2199
-0(case insensitive)
+2186(case insensitive)
 0m12.895s
 
 block
