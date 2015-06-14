@@ -30,3 +30,12 @@ select count(*) from restaurantaddress ra, addressphone ap where jaccard_index(r
 2199
 0(case insensitive)
 0m12.895s
+
+block
+1		7ms
+2		10ms
+4		10ms
+8		10ms
+64		7ms
+128 	7ms
+1024	8ms

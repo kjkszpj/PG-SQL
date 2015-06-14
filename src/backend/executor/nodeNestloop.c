@@ -380,16 +380,16 @@ ExecInitNestLoop(NestLoop *node, EState *estate, int eflags)
 	nlstate->you_NeedNewOuterBlock = true;
 	nlstate->you_NeedNewInner = false;
 	nlstate->you_NeedNewOuter = false;
-	nlstate->you_BlockSize = 128;
+	nlstate->you_BlockSize = 1024;
 	nlstate->you_CntOuter = nlstate->you_BlockSize;
 	nlstate->you_iOuter = nlstate->you_CntOuter + 1;
 	// construct block
-	nlstate->you_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nlstate->you_BlockSize + 10));
+	nlstate->you_Block = (TupleTableSlot**) malloc(sizeof(TupleTableSlot*) * (nlstate->you_BlockSize));
 	for (i = 0; i < nlstate->you_BlockSize; i++)
 		nlstate->you_Block[i] = 
 			ExecInitNullTupleSlot(estate,
 				ExecGetResultType(outerPlanState(nlstate)));
-	nlstate->you_BlockMatched = (bool*) malloc(sizeof(bool) * (nlstate->you_BlockSize + 10));
+	nlstate->you_BlockMatched = (bool*) malloc(sizeof(bool) * (nlstate->you_BlockSize));
 	memset(nlstate->you_BlockMatched, false, sizeof(nlstate->you_BlockMatched));
 	// ------mine ends here
 
