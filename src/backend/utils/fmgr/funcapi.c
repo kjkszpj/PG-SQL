@@ -55,7 +55,7 @@ Datum levenshtein_fast(PG_FUNCTION_ARGS)
 	int i, j, temp;
 	int n1 = VARSIZE(s1) - VARHDRSZ;
 	int n2 = VARSIZE(s2) - VARHDRSZ;
-	int f1[n2], f2[n2];
+	int f1[n2 + 10], f2[n2 + 10];
 	int f1_start, f1_end, f2_start, f2_end;
 	
 	memset(f1, 0, sizeof(f1));
