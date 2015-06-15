@@ -1,0 +1,7 @@
+#!/bin/bash
+#!/bin/bash
+time $HOME/pgsql/bin/psql sim -c "select levenshtein_distance('sunday', 'sunday');"
+
+time $HOME/pgsql/bin/psql sim -c "select levenshtein_distance('sunday', 'Monday');"
+
+time $HOME/pgsql/bin/psql sim -c "select levenshtein_distance('sunday', 'saturday');"

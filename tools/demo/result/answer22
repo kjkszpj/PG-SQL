@@ -1,0 +1,15 @@
+ levenshtein_distance 
+----------------------
+                    0
+(1 row)
+
+ levenshtein_distance 
+----------------------
+                    2
+(1 row)
+
+ levenshtein_distance 
+----------------------
+                    3
+(1 row)
+
